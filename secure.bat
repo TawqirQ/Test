@@ -528,6 +528,9 @@ if errorlevel 1 (
     auditpol /set /category:"Policy Change" /success:enable /failure:enable
     auditpol /set /category:"Privilege Use" /success:enable /failure:enable
     auditpol /set /category:"System" /success:enable /failure:enable
+    auditpol /set /category:"Object Access" /success:enable /failure:enable
+    auditpol /set /category:"Directory Service Access" /success:enable /failure:enable
+    auditpol /set /category:"Detailed Tracking" /success:enable /failure:enable
     echo Audit Policies have been fully enabled.
 )
 goto autoplay
