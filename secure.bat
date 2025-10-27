@@ -521,17 +521,14 @@ choice /c YNC /n /m "Enter choice: "
 if errorlevel 3 goto end
 if errorlevel 2 goto autoplay
 if errorlevel 1 (
-    echo Listing current audit categories and subcategories...
-    auditpol /get /category:*
-    echo.
-    echo Enabling all available audit categories and subcategories (Success & Failure)...
-    auditpol /set /category:* /success:enable /failure:enable
-    if %ERRORLEVEL% equ 0 (
-        echo Audit Policies have been fully enabled for all available categories.
-    ) else (
-        echo Warning: auditpol returned an error. Some categories may not be present on this machine.
-        echo Please run "auditpol /get /category:*" manually to inspect available categories.
-    )
+    echo Enabling Audit Policies...
+    auditpol /set /category:"Account Logon" /success:enable /failure:enable
+    auditpol /set /category:"Account Management" /success:enable /failure:enable
+    auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
+    auditpol /set /category:"Policy Change" /success:enable /failure:enable
+    auditpol /set /category:"Privilege Use" /success:enable /failure:enable
+    auditpol /set /category:"System" /success:enable /failure:enable
+    echo Audit Policies have been fully enabled.
 )
 goto autoplay
 
