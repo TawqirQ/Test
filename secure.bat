@@ -510,6 +510,78 @@ if %ERRORLEVEL% equ 1 (
     )
 )
 
+:: ====== ENABLE AUDIT POLICIES ======
+echo.
+echo ======================================================
+echo [Enable Audit Policies]
+echo This will enable all success and failure audit logging.
+echo (Y)es to enable  (N)o to skip  (C)ancel script
+echo ======================================================
+choice /c YNC /n /m "Enter choice: "
+if errorlevel 3 goto end
+if errorlevel 2 goto autoplay
+if errorlevel 1 (
+    echo Enabling Audit Policies...
+    auditpol /set /category:"Account Logon" /success:enable /failure:enable
+    auditpol /set /category:"Account Management" /success:enable /failure:enable
+    auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
+    auditpol /set /category:"Policy Change" /success:enable /failure:enable
+    auditpol /set /category:"Privilege Use" /success:enable /failure:enable
+    auditpol /set /category:"System" /success:enable /failure:enable
+    echo Audit Policies have been fully enabled.
+)
+goto autoplay
+
+
+:: ====== DISABLE AUTOPLAY AND AUTORUN ======
+:autoplay
+echo.
+echo ======================================================
+echo [Disable AutoPlay and AutoRun]
+echo This will disable AutoRun and AutoPlay on all drives.
+echo (Y)es to disable  (N)o to skip  (C)ancel script
+echo ======================================================
+choice /c YNC /n /m "Enter choice: "
+if errorlevel 3 goto end
+if errorlevel 2 goto dep
+if errorlevel 1 (
+    echo Disabling AutoPlay and AutoRun...
+    reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDriveTypeAutoRun /t REG_DWORD /d 255 /f
+    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDriveTypeAutoRun /t REG_DWORD /d 255 /f
+    reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers" /v DisableAutoplay /t REG_DWORD /d 1 /f
+    echo AutoPlay and AutoRun have been disabled.
+)
+goto dep
+
+
+:: ====== ENABLE DATA EXECUTION PREVENTION (DEP) ======
+:dep
+echo.
+echo ======================================================
+echo [Enable Data Execution Prevention (DEP)]
+echo This will enable DEP system-wide to block malicious code execution.
+echo (Y)es to enable  (N)o to skip  (C)ancel script
+echo ======================================================
+choice /c YNC /n /m "Enter choice: "
+if errorlevel 3 goto end
+if errorlevel 2 goto continue
+if errorlevel 1 (
+    echo Enabling Data Execution Prevention (DEP)...
+    bcdedit.exe /set {current} nx AlwaysOn
+    echo DEP has been enabled. A restart may be required for this change to take effect.
+)
+goto continue
+
+
+:: ====== Continue Script ======
+:continue
+echo.
+echo Additional security settings completed.
+echo Returning to next section...
+echo.
+pause
+goto end
+
 echo ------------------------------------------------------------------------------------
 echo *** End of script                                                                ***
 echo *** Good luck^^!                                                                   ***
