@@ -579,8 +579,6 @@ echo.
 echo Additional security settings completed.
 echo Returning to next section...
 echo.
-pause
-goto end
 
 echo ------------------------------------------------------------------------------------
 echo *** End of script                                                                ***
